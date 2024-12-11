@@ -1,0 +1,132 @@
+/* Sidebar Styling */
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top:50px ;
+  }
+  
+  /* Title Styling */
+  .title {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+  }
+  
+  /* Menu Styling */
+  .menu {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  /* Link Styling */
+  .link {
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    color: #fff;
+    margin-bottom: 10px;
+    background-color: #4A90E2;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  /* Main Content Styling */
+  .main-content {
+    margin-top: 50px;
+    flex: 1;
+    padding: 20px;
+    background-color: #f4f4f9;
+  }
+  
+  /* Admin Dashboard Title */
+  .admin-title {
+    font-size: 24px;
+  }
+  
+  .access-denied {
+    color: red;
+    font-size: 24px;
+  }
+  
+  /* Admin Overview */
+.admin-overview {
+  margin-bottom: 30px;
+}
+
+.admin-overview h2 {
+  font-size: 24px;
+  color: #333;
+}
+
+.admin-overview p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Statistics Cards */
+.statistics {
+  margin-bottom: 30px;
+}
+
+.statistics h3 {
+  font-size: 22px;
+  color: #333;
+}
+
+.stat-cards {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.stat-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 30%;
+  text-align: center;
+}
+
+.stat-card h4 {
+  font-size: 18px;
+  color: #4A90E2;
+}
+
+.stat-card p {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Recent Activities */
+.recent-activities {
+  margin-bottom: 30px;
+}
+
+.recent-activities h3 {
+  font-size: 22px;
+  color: #333;
+}
+
+.recent-activities ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.recent-activities li {
+  background-color: #f9f9f9;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.recent-activities li:hover {
+  background-color: #f1f1f1;
+}
