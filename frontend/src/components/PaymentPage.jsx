@@ -1,16 +1,76 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom"; // Import useLocation hook
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const PaymentPage = () => {
-  const { state } = useLocation(); // Get the state passed from CartPage
-  const { cart = [], totalPrice = 0 } = state || {}; // Destructure cart and totalPrice with defaults
+  const { state } = useLocation();
+  const { cart = [], totalPrice = 0 } = state || {}; // Assuming artisanId is passed in state
   const [paymentStatus, setPaymentStatus] = useState(null);
+  const artistId = localStorage.getItem("artisanIdproduct");
+  const [allowCOD, setAllowCOD] = useState(true); // Whether COD is allowed or not
+  const userId = localStorage.getItem("user");
+  const [user, setUser] = useState(null); // Store user data
+  
+  useEffect(() => {
+    // Fetch user data and check COD limit on component mount
+    const checkCODLimit = async () => {
+      try {
+        const response = await axios.get(`http://localhost:4000/api/cod/${userId}`);
+        setUser(response.data);
+        if (response.data.codCount >= 5) {
+          console.log("COD limit reached. Disabling COD option.");
+          setAllowCOD(false);
+          localStorage.setItem("allowCOD", "false"); // Persist the COD status in localStorage
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
 
-  // Handle payment logic
-  const handlePayment = () => {
-    // Simulate a payment process
-    setPaymentStatus("Payment Successful!");
-    // Integrate with a payment gateway like Stripe, PayPal, etc.
+    // Retrieve the persisted value for allowCOD from localStorage
+    const persistedAllowCOD = localStorage.getItem("allowCOD");
+    if (persistedAllowCOD === "false") {
+      setAllowCOD(false);
+    }
+
+    checkCODLimit();
+  }, [userId]);
+
+  const handlePayment = async (paymentMethod) => {
+    setPaymentStatus("Processing...");
+    alert("Confirm payment");
+
+    if (!artistId) {
+      setPaymentStatus("Error: Artisan not found.");
+      return;
+    }
+
+    if (paymentMethod === "COD" && !allowCOD) {
+      setPaymentStatus("COD limit exceeded. Please choose online payment.");
+      return;
+    }
+
+    // Simulate a payment API request
+    setTimeout(async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:4000/api/updateearned",
+          {
+            artisianId: artistId,
+            amount: totalPrice,
+          }
+        );
+
+        if (response.status === 200) {
+          setPaymentStatus("Payment Successful!");
+        } else {
+          setPaymentStatus("Payment Failed. Please try again.");
+        }
+      } catch (error) {
+        console.error("Payment error:", error);
+        setPaymentStatus("Payment Failed. Please try again.");
+      }
+    }, 3000); // Simulate a delay
   };
 
   return (
@@ -28,7 +88,9 @@ const PaymentPage = () => {
                 <p style={styles.cartItemName}>{item.name}</p>
                 <p style={styles.cartItemPrice}>₹{item.price}</p>
                 <p>Quantity: {item.quantity}</p>
-                <p style={styles.cartItemTotal}>Total: ₹{item.price * item.quantity}</p>
+                <p style={styles.cartItemTotal}>
+                  Total: ₹{item.price * item.quantity}
+                </p>
               </div>
             </div>
           ))
@@ -38,31 +100,24 @@ const PaymentPage = () => {
         </div>
       </div>
 
-      {/* Payment Form Fields */}
-      <div style={styles.paymentForm}>
-        <label style={styles.label}>Card Number</label>
-        <input type="text" placeholder="Enter card number" style={styles.inputField} />
-        
-        <div style={styles.cardDetails}>
-          <div style={styles.cardExp}>
-            <label style={styles.label}>Expiry Date</label>
-            <input type="text" placeholder="MM/YY" style={styles.inputField} />
-          </div>
-          <div style={styles.cardCVV}>
-            <label style={styles.label}>CVV</label>
-            <input type="text" placeholder="Enter CVV" style={styles.inputField} />
-          </div>
-        </div>
-        
-        <div style={styles.paymentSummary}>
-          <h3>Total: ₹{totalPrice}</h3>
-        </div>
+      <div style={styles.paymentOptions}>
+        <button
+          onClick={() => handlePayment("COD")}
+          style={allowCOD ? styles.paymentButton : { ...styles.paymentButton, ...styles.disabledButton }}
+          disabled={!allowCOD} // Disable button when allowCOD is false
+        >
+          Cash on Delivery
+        </button>
+        {!allowCOD && <p>COD limit reached. Please use online payment.</p>}
+        <button
+          onClick={() => handlePayment("Online")}
+          style={styles.paymentButton}
+        >
+          Pay Online
+        </button>
       </div>
 
-      <button onClick={handlePayment} style={styles.paymentButton}>
-        Pay Now
-      </button>
-      {paymentStatus && <p style={styles.paymentStatus}>{paymentStatus}</p>}
+      {paymentStatus && <p>{paymentStatus}</p>}
     </div>
   );
 };
@@ -130,43 +185,10 @@ const styles = {
     fontSize: "20px",
     fontWeight: "bold",
   },
-  paymentForm: {
-    backgroundColor: "#fff",
-    padding: "20px",
-    borderRadius: "8px",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-    marginBottom: "30px",
-  },
-  label: {
-    fontSize: "16px",
-    color: "#333",
-    marginBottom: "6px",
-    fontWeight: "bold",
-  },
-  inputField: {
-    width: "100%",
-    padding: "12px",
-    marginBottom: "15px",
-    borderRadius: "8px",
-    border: "1px solid #ddd",
-    fontSize: "16px",
-  },
-  cardDetails: {
+  paymentOptions: {
     display: "flex",
+    flexDirection: "column",
     gap: "20px",
-    marginBottom: "20px",
-  },
-  cardExp: {
-    flex: 1,
-  },
-  cardCVV: {
-    flex: 1,
-  },
-  paymentSummary: {
-    marginTop: "20px",
-    fontSize: "20px",
-    fontWeight: "bold",
-    color: "#333",
   },
   paymentButton: {
     backgroundColor: "#007bff",
@@ -179,11 +201,10 @@ const styles = {
     width: "100%",
     marginTop: "20px",
   },
-  paymentStatus: {
-    marginTop: "20px",
-    fontSize: "18px",
-    color: "#4caf50",
-    textAlign: "center",
+  disabledButton: {
+    backgroundColor: "#d6d6d6", // Gray background for disabled button
+    color: "#a6a6a6", // Lighter text color
+    cursor: "not-allowed", // Change cursor to indicate it's not clickable
   },
 };
 

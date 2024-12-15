@@ -19,7 +19,8 @@ const ArtisanSchema = new mongoose.Schema({
         type: String,
         enum: ['artisan', 'user'],
         default: 'artisan'
-    }
+    },
+    earnedAmount: { type: Number, default: 0 },
 });
 
 const Artisan = mongoose.model('Artisan', ArtisanSchema);

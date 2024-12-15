@@ -23,12 +23,13 @@ const ArtisianLogin = () => {
     try {
       const response = await axios.post('http://localhost:4000/api/login', formData);
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('admin', response.data.admin);
+      localStorage.setItem('role', response.data.role);
       localStorage.setItem('artid', response.data.artid);
+      localStorage.setItem('isadmin', response.data.admin);
       console.log(response.data.artid);
       alert('Login successful');
       window.dispatchEvent(new Event('storage')); // Notify navbar of changes
-      navigate('/dashboard');
+      window.location.href = '/dashboard';;
     } catch (error) {
       console.error(error);
       alert(error.response?.data?.message || 'An error occurred. Please try again.');

@@ -23,8 +23,10 @@ const AdminRegister = () => {
     try {
       const response = await axios.post('http://localhost:4000/api/artisianregister', formData);
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('name', response.data.name);
-      localStorage.setItem('isadmin', response.data.isadmin);
+      localStorage.setItem('role', response.data.role);
+      localStorage.setItem('artid', response.data.artid);
+      localStorage.setItem('isadmin', response.data.admin);
+
       alert(response.data.message || 'Registration successful');
       window.dispatchEvent(new Event('storage')); // Notify navbar of changes
       navigate('/dashboard');

@@ -11,8 +11,10 @@ import AdminRegister from './components/Admin/AdminRegister';
 import UserLogin from './components/UserLogin';
 import CartPage from './components/CartPage';
 import PaymentPage from './components/PaymentPage';
+import UserProfile from './components/UserProfile';
 
 function App() {
+  const userId = '675ab3726658002a07519f93'
   return (
       <Router>
         <Navbar />
@@ -26,6 +28,7 @@ function App() {
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path ='/cart' element={<CartPage />} />
           <Route path ='/payment' element={<PaymentPage />} />
+          <Route path='/your-profile' element={<UserProfile userId={userId} />} />
         </Routes>
       </Router>
   );

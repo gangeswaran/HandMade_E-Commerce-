@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import '../styles/ArtisianAuth.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const UserRegister = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '', location: '', bio: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -23,15 +22,14 @@ const UserRegister = () => {
     try {
       const response = await axios.post('http://localhost:4000/api/userregister', formData);
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('name', response.data.name);
-      localStorage.setItem('role', response.data.role);
-      console.log(response.data);
-      alert( 'Registration successful');
+      localStorage.setItem('name', response.data.user.name);
+      localStorage.setItem('role', response.data.user.role);
+      alert('Registration successful');
       window.dispatchEvent(new Event('storage')); // Notify navbar of changes
-      navigate('/');
+      window.location.href = '/'
     } catch (error) {
       console.error(error);
-      alert(error.response?.data?.message || 'Registration failed. Please try again.');
+      alert(error?.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -49,7 +47,6 @@ const UserRegister = () => {
 
         <label>Password:</label>
         <input type="password" name="password" value={formData.password} onChange={handleChange} required />
-        
 
         <button type="submit" disabled={loading}>
           {loading ? 'Registering...' : 'Register'}
@@ -61,3 +58,5 @@ const UserRegister = () => {
 };
 
 export default UserRegister;
+
+

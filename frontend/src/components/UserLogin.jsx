@@ -24,9 +24,19 @@ const UserLogin = () => {
       const response = await axios.post('http://localhost:4000/api/userlogin', formData);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('admin', response.data.admin);
+      console.log(response.data);
+      localStorage.setItem('user',response.data.userid);
+      if (response.data.codCount >= 5){
+        localStorage.setItem('allowCOD','false');
+      }
+      else{
+        localStorage.setItem('allowCOD','true');
+      }
+      
       alert('Login successful');
       window.dispatchEvent(new Event('storage')); // Notify navbar of changes
-      navigate('/');
+      window.location.href = '/';
+
     } catch (error) {
       console.error(error);
       alert(error.response?.data?.message || 'An error occurred. Please try again.');

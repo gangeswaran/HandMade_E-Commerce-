@@ -14,6 +14,13 @@ const Navbar = () => {
   const logout = () => {
     localStorage.removeItem("role");
     localStorage.removeItem("token");
+    localStorage.removeItem("isadmin");
+    localStorage.removeItem("artid");
+    localStorage.removeItem("user");
+    localStorage.removeItem("allowCOD");
+    localStorage.removeItem("admin");
+    localStorage.removeItem("artisanIdproduct");
+    localStorage.removeItem('cart');
     window.location.href = '/'; // Redirect to home page or login page
   };
 
@@ -27,7 +34,7 @@ const Navbar = () => {
         <Link to="/productsList" onClick={() => setIsMobileMenuOpen(false)}>Products</Link>
       </li>
       <li>
-        <Link to="/user-register" onClick={() => setIsMobileMenuOpen(false)}>Profile</Link>
+        <Link to="/your-profile" onClick={() => setIsMobileMenuOpen(false)}>Profile</Link>
       </li>
       <li>
         <Link to="/contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
@@ -87,7 +94,7 @@ const Navbar = () => {
       <ul className={isMobileMenuOpen ? "nav-links active" : "nav-links"}>
         {/* Display links based on login status and role */}
         {token ? (
-          role === "admin" ? adminLinks : userLinks
+          role === "artisan" ? adminLinks : userLinks
         ) : (
           guestLinks
         )}

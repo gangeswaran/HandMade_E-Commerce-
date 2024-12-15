@@ -17,22 +17,63 @@ const ProductsList = () => {
   const toggleReadMore = () => {
     setReadMore(!readMore);
   };
-  const addToCart = (product) => {
-    if (!token) {
-      alert("Please log in to add items to the cart");
+  const addToCart = async (product) => {
+    let user = localStorage.getItem("user");
+    // let userid = JSON.parse(user);
+    try {
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        user = userData;
+      } else {
+        console.warn("User data is not present in localStorage");
+        alert("Please log in to add items to the cart");
+        return;
+      }
+    } catch (error) {
+      console.error("Error parsing user from localStorage", error);
+      alert("There was an issue retrieving your user data. Please log in again.");
       return;
     }
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  
+    const userId = user; // Ensure this userId exists
+    console.log("User ID:", userId);
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
     const existingProduct = cart.find((item) => item._id === product._id);
   
+    // If product already exists in the cart, increment quantity
     if (existingProduct) {
       existingProduct.quantity += 1;
     } else {
       cart.push({ ...product, quantity: 1 });
     }
+  
+    // Save updated cart to localStorage
     localStorage.setItem("cart", JSON.stringify(cart));
-    navigate("/cart");
+  
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/addToCart",
+        { 
+          productId: product._id, 
+          quantity: 1, 
+          userId: user // Ensure this field is included in the request payload
+        }
+      );
+      console.log(response.data);
+      alert('Product added to cart successfully');
+      navigate('/cart');
+    } catch (error) {
+      console.error("Error adding to cart", error);
+      alert('Failed to add product to cart');
+    }
   };
+  
+  
+  
+  
+  
+  
+  
   
   useEffect(() => {
     axios
@@ -45,7 +86,14 @@ const ProductsList = () => {
         setError(error.message);
         setLoading(false);
       });
-  }, []);
+  },[]);
+  products.map((product) => {
+    localStorage.setItem("artisanIdproduct",product.artisanId._id);
+
+  });
+  if (products.length === 0) {
+    return <div>No products found.</div>;
+  }
 
   if (loading) {
     return <div>Loading...</div>;

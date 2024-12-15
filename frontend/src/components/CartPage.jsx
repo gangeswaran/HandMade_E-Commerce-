@@ -3,13 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
-  const navigate = useNavigate(); // Use useNavigate hook instead of useHistory
-
-  // Fetch cart items from localStorage when the component mounts
+  const navigate = useNavigate(); 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCart(storedCart);
+    const carts = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(carts);
   }, []);
+  
 
   // Calculate the total price of the cart
   const calculateTotal = () => {
@@ -27,12 +26,14 @@ const CartPage = () => {
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
 
-  // Handle item removal from the cart
-  const handleRemoveItem = (id) => {
+  const handleRemoveItem = async (id) => {
     const updatedCart = cart.filter((item) => item._id !== id);
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
+  
+  
+  
 
   // Proceed to payment page
   const proceedToBuy = () => {
