@@ -1,5 +1,5 @@
 const express = require('express');
-const { CreateArtisian, LoginArtisian , UserLogin, CreateUser, getUserById, updateEarnedAmountForArtisian,getEarnedAmount, leader, codPayment} = require('../controllers/ArtisianController');
+const { CreateArtisian, LoginArtisian , UserLogin, CreateUser, getUserById, updateEarnedAmountForArtisian,getEarnedAmount, leader, codPayment, CheckcodPayment, adduserCart} = require('../controllers/ArtisianController');
 
 const router = express.Router();
 
@@ -11,7 +11,9 @@ router.get('/userprofile/:id', getUserById)
 router.post('/updateearned', updateEarnedAmountForArtisian);
 router.get('/earned/:id', getEarnedAmount)
 router.get('/leaderboard', leader)
-router.get('/cod/:id',codPayment)
+router.get('/cod/:id',CheckcodPayment)
+router.post('/checkcod/:id',codPayment)
+router.post('/usercart',adduserCart)
 
 module.exports = router;
 

@@ -61,8 +61,9 @@ console.log(artistId);
           ))}
         </tbody>
       </table>
-      <h1>Total sales : ₹ {additionalSalesData.earnedAmount}.00</h1>
-      <h2>Profit Earned : ₹{additionalSalesData.earnedAmount - 59}.00</h2>
+      <h1>Total sales: ₹ {additionalSalesData.earnedAmount}.00</h1>
+<h2>Profit Earned: ₹ {additionalSalesData.earnedAmount > 59 ? additionalSalesData.earnedAmount - 59 : 0}.00</h2>
+
     </div>
   );
 };

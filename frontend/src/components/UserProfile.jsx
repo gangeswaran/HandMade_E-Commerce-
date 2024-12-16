@@ -5,16 +5,15 @@ function UserProfile({ userId }) {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const id = localStorage.getItem('user');
-  const userid = JSON.parse(id);
+  const id = localStorage.getItem('user');  // The logged-in user's ID
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/api/userprofile/${userid}`, {
+        const response = await axios.get(`http://localhost:4000/api/userprofile/${id}`, {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`  // Authorization header with JWT
           }
         });
         setUserData(response.data);
@@ -26,10 +25,10 @@ function UserProfile({ userId }) {
       }
     };
 
-    if (userId) {
+    if (id) {
       fetchUserData();
     }
-  }, [userId]);
+  }, [id]);
 
   const userProfileStyles = {
     width: '100%',
@@ -49,6 +48,13 @@ function UserProfile({ userId }) {
   const profileDetailsStyles = {
     fontSize: '18px',
     color: '#555',
+  };
+
+  const cartStyles = {
+    marginTop: '20px',
+    padding: '10px',
+    backgroundColor: '#f1f1f1',
+    borderRadius: '5px',
   };
 
   const loadingStyles = {
@@ -82,6 +88,22 @@ function UserProfile({ userId }) {
       </div>
       <div style={profileDetailsStyles}>
         <p><strong>Email:</strong> {userData.email || 'No email available'}</p>
+        <p><strong>COD Usage Count:</strong> {userData.codCount}</p>
+        
+        <div style={cartStyles}>
+          <h3>Products Purchased</h3>
+          {userData.cart && userData.cart.length > 0 ? (
+            <ul>
+              {userData.cart.map((item) => (
+                <li key={item._id}>
+                  Product ID: {item.productId} | Quantity: {item.quantity}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No products found in cart.</p>
+          )}
+        </div>
       </div>
     </div>
   );
